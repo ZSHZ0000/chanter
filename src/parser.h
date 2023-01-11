@@ -6,6 +6,40 @@
 #include <stdint.h>
 #include <stdio.h>
 
+/* Check if a character is within a range. */
+#define IS_DIGIT(x) (x >= '0' && x <= '9')
+#define IS_WHITESPACE(x) (x == ' ' || x == '\t' || x == '\n' || x == '\r')
+
+/* Types of token. */
+enum TOKEN_TYPE
+  {
+	TOKEN_NONE,
+	TOKEN_LITERAL,
+	TOKEN_PLUS,
+	TOKEN_MINUS
+  };
+
+/* Lexema node, linked lists because I don't really have anything better for a stream
+** of lexemas. */
+struct lex_node
+{
+  enum TOKEN_TYPE type; /* Token type. */
+  struct lex_node* next; /* Next node in the linked list */
+  char* begin; /* The beginning of the token in the source text. */
+  ptrdiff_t len; /* The length of the token in the source text. */
+};
+
+/* Scanner context. */
+struct scan_ctx
+{
+  char* src; /* Source text. */
+  char* src_end; /* Source text end. */
+  char* current; /* Current offset. */
+  ptrdiff_t len; /* Length of the source, not necessary but it eases debugging. */
+  struct lex_node* root_node; /* Root node. */
+  struct lex_node* prev_node; /* Previous node. */
+};
+
 /* Get the length of a file with a file handle, resets offset to zero. */
 ptrdiff_t
 zsize_file(FILE* file);
@@ -17,5 +51,21 @@ read_file(FILE* file, char** return_addr);
 /* Get file from name. */
 int
 get_file(char* filename, char** ret_addr, ptrdiff_t* len_addr);
+
+/* Initialize scanner context. */
+void
+init_scan_context(struct scan_ctx* context, char* filename);
+
+/* Destroy lexema linked list */
+void
+destroy_lex_list(struct lex_node* list);
+
+/* Kill scan context. */
+void
+kill_scan_context(struct scan_ctx* context);
+
+/* Scan & lex a text string, returning a list. first node is always a sentry node. */
+struct lex_node*
+scan_text(struct scan_ctx* context);
 
 #endif /* parser.h */
