@@ -122,14 +122,48 @@ get_number_literal(struct scan_ctx* context)
 
   /* So it doesn't loops infinitely. */
   context->current = tkn_end;
+
+  /* TODO: Error handling. */
+  return 0;
+}
+
+/* Get an identifer token. */
+static int
+get_identifier(struct scan_ctx* context)
+{
+  char* current = context->current;
+  char* tkn_end = current + 1;
+
+  /* Iterate through, until we get a non-digit. */
+  while (IS_ALNUM(*tkn_end) && tkn_end < context->src_end)
+	tkn_end++;
+
+    /* Create lex_node. */
+  struct lex_node* node = create_node();
+  context->prev_node->next = node;
+  node->type = TOKEN_IDENTIFIER;
+  node->begin = current;
+  node->len = ((intptr_t) tkn_end - (intptr_t) current);
+  context->prev_node = node;
+
+  /* So it doesn't loops infinitely. */
+  context->current = tkn_end;
   
   /* TODO: Error handling. */
   return 0;
 }
 
-/* Append a stringless token. */
-void
-add_token(struct scan_ctx* context, enum TOKEN_TYPE type)
+/* Skip whitespace. */
+static void
+skip_whitespace(struct scan_ctx* context)
+{
+  while (IS_WHITESPACE(*context->current))
+	{ context->current++; }
+}
+
+/* Create a stringless token. */
+struct lex_node*
+create_token(struct scan_ctx* context, enum TOKEN_TYPE type)
 {
   struct lex_node* node = create_node();
   context->prev_node->next = node;
@@ -137,6 +171,17 @@ add_token(struct scan_ctx* context, enum TOKEN_TYPE type)
   node->begin = NULL;
   node->len = 0;
   context->prev_node = node;
+  return node;
+}
+
+/* Make the token consume a single character. */
+static void
+token_1char(struct scan_ctx* context, enum TOKEN_TYPE type)
+{
+  create_token(context, type);
+  context->prev_node->begin = context->current;
+  context->prev_node->len = sizeof(char);
+  advance_char(context);
 }
 
 /* Initialize context. */
@@ -199,29 +244,35 @@ scan_text(struct scan_ctx* context)
 		  get_number_literal(context);
 		  character = peek_char(context);
 		}
+	  else if (IS_ALPHA(character))
+		{
+		  get_identifier(context);
+		  character = peek_char(context);
+		}
+	  else if (IS_WHITESPACE(character))
+		{
+		  skip_whitespace(context);
+		  character = peek_char(context);
+		}
 	  /* TODO: make this less abhorrend to look at. */
 	  else if (character == '+')
 		{
-		  add_token(context, TOKEN_PLUS);
-		  advance_char(context);
+		  token_1char(context, TOKEN_PLUS);
 		  character = peek_char(context);
 		}
 	  else if (character == '-')
 		{
-		  add_token(context, TOKEN_MINUS);
-		  advance_char(context);
+		  token_1char(context, TOKEN_MINUS);
 		  character = peek_char(context);
 		}
 	  else if (character == '*')
 		{
-		  add_token(context, TOKEN_ASTERISK);
-		  advance_char(context);
+		  token_1char(context, TOKEN_ASTERISK);
 		  character = peek_char(context);
 		}
 	  else if (character == '/')
 		{
-		  add_token(context, TOKEN_SLASH);
-		  advance_char(context);
+		  token_1char(context, TOKEN_SLASH);
 		  character = peek_char(context);
 		}
 	  else break;

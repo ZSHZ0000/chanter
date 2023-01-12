@@ -20,19 +20,23 @@ print_node_type(struct lex_node* node)
 	  break;
 
 	case TOKEN_PLUS:
-	  printf("PLUS\n");
+	  printf("PLUS: %.*s\n", (int) node->len, node->begin);
 	  break;
 
 	case TOKEN_MINUS:
-	  printf("MINUS\n");
+	  printf("MINUS: %.*s\n", (int) node->len, node->begin);
 	  break;
 
 	case TOKEN_ASTERISK:
-	  printf("ASTERISK\n");
+	  printf("ASTERISK: %.*s\n", (int) node->len, node->begin);
 	  break;
 
 	case TOKEN_SLASH:
-	  printf("SLASH\n");
+	  printf("SLASH: %.*s\n", (int) node->len, node->begin);
+	  break;
+
+	case TOKEN_IDENTIFIER:
+	  printf("IDENTIFIER: %.*s\n", (int) node->len, node->begin);
 	  break;
 
 	default:

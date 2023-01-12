@@ -8,6 +8,8 @@
 
 /* Check if a character is within a range. */
 #define IS_DIGIT(x) (x >= '0' && x <= '9')
+#define IS_ALPHA(x) ((x >= 'a' && x <= 'z') || (x >= 'A' && x <= 'Z'))
+#define IS_ALNUM(x) (IS_ALPHA(x) || IS_DIGIT(x))
 #define IS_WHITESPACE(x) (x == ' ' || x == '\t' || x == '\n' || x == '\r')
 
 /* Types of token. */
@@ -18,7 +20,8 @@ enum TOKEN_TYPE
 	TOKEN_PLUS,
 	TOKEN_MINUS,
 	TOKEN_ASTERISK,
-	TOKEN_SLASH
+	TOKEN_SLASH,
+	TOKEN_IDENTIFIER
   };
 
 /* Lexema node, linked lists because I don't really have anything better for a stream
@@ -62,9 +65,9 @@ init_scan_context(struct scan_ctx* context, char* filename);
 void
 destroy_lex_list(struct lex_node* list);
 
-/* Append a stringless token. */
-void
-add_token(struct scan_ctx* context, enum TOKEN_TYPE type);
+/* Create a stringless token, added to the token list. */
+struct lex_node*
+create_token(struct scan_ctx* context, enum TOKEN_TYPE type);
 
 /* Kill scan context. */
 void
