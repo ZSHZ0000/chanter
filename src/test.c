@@ -26,6 +26,9 @@ print_node_type(struct lex_node* node)
 	case TOKEN_MINUS:
 	  printf("MINUS\n");
 	  break;
+
+	default:
+	  printf("UNKNOWN NODE TYPE.\n");
 	}
 }
 
@@ -36,7 +39,7 @@ print_list(struct lex_node* list)
   struct lex_node* current = list;
   while (current != NULL)
 	{
-	  printf("DD: PRINTING %lX\n", (uintptr_t) list);
+	  printf("DD: PRINTING %lX\n", (uintptr_t) current);
 	  print_node_type(current);
 	  current = current->next;
 	}
@@ -58,7 +61,8 @@ main(int argc, char** argv)
   /* Initialize context II. */
   init_scan_context(&context, argv[1]);
   /* Print lexema list that we scanned. */
-  print_list(scan_text(&context));
+  struct lex_node* list = scan_text(&context);
+  print_list(list->next);
   /* Then kill it. */
   kill_scan_context(&context);
 }

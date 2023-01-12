@@ -60,6 +60,10 @@ init_scan_context(struct scan_ctx* context, char* filename);
 void
 destroy_lex_list(struct lex_node* list);
 
+/* Append a stringless token. */
+void
+add_token(struct scan_ctx* context, enum TOKEN_TYPE type);
+
 /* Kill scan context. */
 void
 kill_scan_context(struct scan_ctx* context);

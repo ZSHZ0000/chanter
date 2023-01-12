@@ -85,10 +85,19 @@ create_node(void)
 static int
 peek_char(struct scan_ctx* context)
 {
-  if(context->current < context->src_end)
+  if (context->current < context->src_end)
 	return *context->current;
   return -1;
 };
+
+/* Advance in the source by K characters. */
+static int
+advance_char(struct scan_ctx* context)
+{
+  if (context->current + 1 < context->src_end)
+	context->current++;
+  return -1;
+}
 
 /* Get a number literal. */
 static int
@@ -114,6 +123,18 @@ get_number_literal(struct scan_ctx* context)
   
   /* TODO: Error handling. */
   return 0;
+}
+
+/* Append a stringless token. */
+void
+add_token(struct scan_ctx* context, enum TOKEN_TYPE type)
+{
+  struct lex_node* node = create_node();
+  context->prev_node->next = node;
+  node->type = type;
+  node->begin = NULL;
+  node->len = 0;
+  context->prev_node = node;
 }
 
 /* Initialize context. */
@@ -174,6 +195,18 @@ scan_text(struct scan_ctx* context)
 	  if (IS_DIGIT(character))
 		{
 		  get_number_literal(context);
+		  character = peek_char(context);
+		}
+	  else if (character == '+')
+		{
+		  add_token(context, TOKEN_PLUS);
+		  advance_char(context);
+		  character = peek_char(context);
+		}
+	  else if (character == '-')
+		{
+		  add_token(context, TOKEN_MINUS);
+		  advance_char(context);
 		  character = peek_char(context);
 		}
 	  else break;
