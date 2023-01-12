@@ -58,7 +58,7 @@ main(int argc, char** argv)
   /* Check for proper argument count. */
   if (argc != 2)
 	{
-	  fprintf(stderr, "%s: Usage: %s filename\n", argv[0], argv[0]);
+	  fprintf(stderr, "%s: Usage: %s file_name\n", argv[0], argv[0]);
 	  return EX_USAGE;
 	}
 
