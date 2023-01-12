@@ -1,5 +1,5 @@
-#ifndef PARSER_H
-#define PARSER_H
+#ifndef LEXER_H
+#define LEXER_H
 
 /* For type definitions I need & use. */
 #include <stddef.h>
@@ -74,4 +74,4 @@ kill_scan_context(struct scan_ctx* context);
 struct lex_node*
 scan_text(struct scan_ctx* context);
 
-#endif /* parser.h */
+#endif /* lexer.h */

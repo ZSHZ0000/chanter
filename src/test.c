@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <sysexits.h>
 
-#include "parser.h"
+#include "lexer.h"
 
 /* Prints lexema node. */
 void

@@ -10,7 +10,7 @@
 #include <errno.h>
 #include <err.h>
 
-#include "parser.h"
+#include "lexer.h"
 
 /* Get the length of a file with a file handle, resets offset to zero. */
 ptrdiff_t
