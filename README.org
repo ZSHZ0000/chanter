@@ -1,14 +1,14 @@
 * CHANTER
 
 ** Prelude
-This is a project that should implement a programming language (very )loosely
+This is a project that should implement a programming language (very) loosely
 based on lua.
 
 Currently only the lexer works with a limited set of tokens, the roadmap is still
 long.
 
 ** Building
-Change directory from the root of the project to \/src\/ then execute
+Change directory from the root of the project to =/src/= then execute
 #+BEGIN_SRC sh
   $ make
 #+END_SRC
