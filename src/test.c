@@ -27,6 +27,14 @@ print_node_type(struct lex_node* node)
 	  printf("MINUS\n");
 	  break;
 
+	case TOKEN_ASTERISK:
+	  printf("ASTERISK\n");
+	  break;
+
+	case TOKEN_SLASH:
+	  printf("SLASH\n");
+	  break;
+
 	default:
 	  printf("UNKNOWN NODE TYPE.\n");
 	}
@@ -39,7 +47,6 @@ print_list(struct lex_node* list)
   struct lex_node* current = list;
   while (current != NULL)
 	{
-	  printf("DD: PRINTING %lX\n", (uintptr_t) current);
 	  print_node_type(current);
 	  current = current->next;
 	}

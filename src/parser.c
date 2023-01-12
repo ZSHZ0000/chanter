@@ -43,6 +43,7 @@ read_file(FILE* file, char** return_addr)
 
   /* Abort if we can't read file completely, it'd be useless to try parsing an
   ** incomplete program, atleast that is what I think. */
+  /* TODO: Error handling. */
   if (read_count != read_size)
 	err(EX_IOERR, "Error while reading file");
 
@@ -78,6 +79,7 @@ create_node(void)
   node->next = NULL;
   node->begin = NULL;
   node->len = 0;
+  /* TODO: Error handling. */
   return node;
 }
 
@@ -197,6 +199,7 @@ scan_text(struct scan_ctx* context)
 		  get_number_literal(context);
 		  character = peek_char(context);
 		}
+	  /* TODO: make this less abhorrend to look at. */
 	  else if (character == '+')
 		{
 		  add_token(context, TOKEN_PLUS);
@@ -206,6 +209,18 @@ scan_text(struct scan_ctx* context)
 	  else if (character == '-')
 		{
 		  add_token(context, TOKEN_MINUS);
+		  advance_char(context);
+		  character = peek_char(context);
+		}
+	  else if (character == '*')
+		{
+		  add_token(context, TOKEN_ASTERISK);
+		  advance_char(context);
+		  character = peek_char(context);
+		}
+	  else if (character == '/')
+		{
+		  add_token(context, TOKEN_SLASH);
 		  advance_char(context);
 		  character = peek_char(context);
 		}

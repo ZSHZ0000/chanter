@@ -16,7 +16,9 @@ enum TOKEN_TYPE
 	TOKEN_NONE,
 	TOKEN_LITERAL,
 	TOKEN_PLUS,
-	TOKEN_MINUS
+	TOKEN_MINUS,
+	TOKEN_ASTERISK,
+	TOKEN_SLASH
   };
 
 /* Lexema node, linked lists because I don't really have anything better for a stream
