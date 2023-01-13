@@ -19,11 +19,9 @@ described as follows:
 The language syntax is defined as follows:
 
 #+BEGIN_EXAMPLE
-Expression = Factor { ( "+" | "-" ) Factor }
+Expression = Factor ( "+" | "-" ) Factor | Factor
 
-Factor = Unary { ("*" | "/" ) Unary }
+Factor = Primary ( "*" | "/" ) Factor | Primary;
 
-Unary = [ "-" ] Primary
-
-Primary = Identifier | Number;
+Primary = Identifier | Number | "(" Expression ")"
 #+END_EXAMPLE
