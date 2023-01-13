@@ -7,7 +7,7 @@ described as follows:
 |------------------+--------------------|
 | Action           | Token              |
 |------------------+--------------------|
-| Definition       | ===                |
+| Definition       | =                  |
 | Alternation      | \vert              |
 | Optional entries | [ ... ]            |
 | Repetition       | { ... }            |
@@ -23,7 +23,7 @@ Expression = Factor { ( "+" | "-" ) Factor }
 
 Factor = Unary { ("*" | "/" ) Unary }
 
-Unary = "-" Primary
+Unary = [ "-" ] Primary
 
 Primary = Identifier | Number;
 #+END_EXAMPLE
