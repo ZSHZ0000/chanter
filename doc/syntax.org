@@ -1,0 +1,29 @@
+* WORK-IN-PROGRESS CHANTER SYNTAX DEFINITION
+
+** Prelude
+This syntax is described in a variant of the Extended Backus-Naur Form (EBNF) which is
+described as follows:
+
+|------------------+--------------------|
+| Action           | Token              |
+|------------------+--------------------|
+| Definition       | ===                |
+| Alternation      | \vert              |
+| Optional entries | [ ... ]            |
+| Repetition       | { ... }            |
+| Grouping         | ( ... )            |
+| Terminal string  | " ... " or ' ... ' |
+|------------------+--------------------|
+
+** Definition of the syntax
+The language syntax is defined as follows:
+
+#+BEGIN_EXAMPLE
+Expression = Factor { ( "+" | "-" ) Factor }
+
+Factor = Unary { ("*" | "/" ) Unary }
+
+Unary = "-" Primary
+
+Primary = Identifier | Number;
+#+END_EXAMPLE
