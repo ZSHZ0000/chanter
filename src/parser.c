@@ -85,7 +85,7 @@ make_expression_node(struct factor_node* lhs, enum EXPR_TYPE op, struct __node_t
 }
 
 /* Prototype. */
-void __destroy_expr_node(struct __node_type* node);
+void __destroy_expression_node(struct __node_type* node);
 
 /* Destroy identifier node. */
 void
@@ -121,7 +121,7 @@ __destroy_primary_node(struct __node_type* node)
 	  break;
 
 	case NODE_EXPR:
-	  __destroy_expr_node(node_cast->sub);
+	  __destroy_expression_node(node_cast->sub);
 	  break;
 
 	  /* Report this as an error because this would be an internal inconsistency. */
@@ -149,6 +149,27 @@ __destroy_factor_node(struct __node_type* node)
 	  __destroy_factor_node(node_cast->rhs);
 	  break;
 	}
+  free(node);
+}
+
+/* Destroy an expr node, if it has other expr sub-nodes, destroy them recursively. */
+void
+__destroy_expression_node(struct __node_type* node)
+{
+  struct expression_node* node_cast = (struct expression_node*) node;
+  switch(node_cast->operation)
+	{
+	case EXPR_NONE:
+	  __destroy_factor_node((struct __node_type*) node_cast->lhs);
+	  break;
+
+	case EXPR_ADD:
+	case EXPR_SUB:
+	  __destroy_factor_node((struct __node_type*) node_cast->lhs);
+	  __destroy_expression_node(node_cast->rhs);
+	  break;
+	}
+  free(node);
 }
 
 /* Deallocate a parse tree. */
@@ -175,7 +196,7 @@ destroy_parse_tree(struct __node_type* tree)
 	  break;
 
 	case NODE_EXPR:
-	  __destroy_expr_node(tree);
+	  __destroy_expression_node(tree);
 	  break;
 
 	default:
