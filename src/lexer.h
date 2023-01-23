@@ -73,6 +73,10 @@ create_token(struct scan_ctx* context, enum TOKEN_TYPE type);
 void
 kill_scan_context(struct scan_ctx* context);
 
+/* Rewind previous node to root node of the token stream. */
+void
+context_rewind_prev_node(struct scan_ctx* context);
+
 /* Scan & lex a text string, returning a list. first node is always a sentry node. */
 struct lex_node*
 scan_text(struct scan_ctx* context);

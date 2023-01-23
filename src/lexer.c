@@ -279,3 +279,10 @@ scan_text(struct scan_ctx* context)
 	}
   return context->root_node;
 }
+
+/* Rewind previous node to root node of the token stream. */
+void
+context_rewind_prev_node(struct scan_ctx* context)
+{
+  context->prev_node = context->root_node;
+}
