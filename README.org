@@ -20,7 +20,8 @@ it should build without problems as long as you have the required headers.
 #+END_SRC
 
 ** Short-term To Do
-- Parser :: To build abstract syntax trees that the compiler will process.
+- Lexer :: Possibly clean-up, make it more orthogonal(?).
+- Parser :: To implement the parser with the pieces we have so far.
 - Documentation :: Documentation must be provided & improved.
-- Compiler :: To process the tree, do optimizing passes & throw bytecode out.
-- Virtual machine :: To be able to execute beforementioned bytecode.
+- Compiler :: So we can generate bytecode.
+- Virtual machine :: So we can execute byttecode.
