@@ -204,3 +204,101 @@ destroy_parse_tree(struct __node_type* tree)
 	  break;
 	}
 }
+
+/* Get a lex token. */
+struct lex_node*
+accept_token(struct scan_ctx* context, enum TOKEN_TYPE type)
+{
+  /* If the type we need is the current node (called previous for some reason I forgot)
+  ** it will be accepted & it's lex node address will be returned. */
+  if (type == context->prev_node->type)
+	{
+	  struct lex_node* node = context->prev_node;
+	  context->prev_node = node->next;
+	  return node;
+	}
+  else return NULL;
+}
+
+/* Require a lex token. */
+struct lex_node*
+require_token(struct scan_ctx* context, enum TOKEN_TYPE type)
+{
+  struct lex_node* node = accept_token(context, type);
+  if (!node)
+	err(EX_SOFTWARE, "Token of unexpected position has been found");
+  return node;
+}
+
+/* Get an expression, create according node. */
+struct expression_node*
+get_expression(struct scan_ctx* context);
+
+/* Get an identifier token, create an identifier node. */
+struct identifier_node*
+get_identifier_token(struct scan_ctx* context)
+{
+  struct lex_node* node = accept_token(context, TOKEN_IDENTIFIER);
+  return (struct identifier_node*) make_identifier_node(node->begin, node->len);
+}
+
+/* Get a number token, create according node. */
+struct number_node*
+get_number_token(struct scan_ctx* context)
+{
+  struct lex_node* node = accept_token(context, TOKEN_LITERAL);
+  return (struct number_node*) make_number_node(node->begin);
+}
+
+/* Get a primary token, create according node. */
+struct primary_node*
+get_primary_token(struct scan_ctx* context)
+{
+  struct __node_type* node = NULL;
+  /* mmmmmmmmmmmmmmmmmmm. */
+  if ((node = (struct __node_type*) get_identifier_token(context)))
+	return (struct primary_node*) make_primary_node(node);
+  if ((node = (struct __node_type*) get_number_token(context)))
+	return (struct primary_node*) make_primary_node(node);
+  /* TODO: FIX THIS ONCE I IMPLEMENT PARENTHESIS SUPPORT, THE PROTOTYPE IS
+  ** NEEDED TO BE DONE SO I CAN TEST THROUGHFUL THIS & DITCH ANY PIECES THAT ARE
+  ** DEEMED TOO COMPLEX OR UNORTHOGONAL. */
+  // if ((node = (struct __node_type*) get_expression(context)))
+  // return (struct primary_node*) make_primary_node(node);
+  else
+	err(EX_SOFTWARE,"Synctatic error");
+}
+
+/* Get a factor node, create according node. */
+struct factor_node*
+get_factor(struct scan_ctx* context)
+{
+  struct primary_node* lhs = get_primary_token(context);
+  struct lex_node* op = NULL;
+  if ((op = accept_token(context, TOKEN_ASTERISK)))
+	return (struct factor_node*)
+	  make_factor_node(lhs, FACTOR_MUL, (struct __node_type*) get_factor(context));
+  if ((op = accept_token(context, TOKEN_SLASH)))
+	return (struct factor_node*)
+	  make_factor_node(lhs, FACTOR_DIV, (struct __node_type*) get_factor(context));
+  /* No operation related to the factor node. */
+  return (struct factor_node*) make_factor_node(lhs, FACTOR_NONE, NULL);
+}
+
+/* TODO: REPEAT CODE IS TERRIBLE, BUT THIS IS A RECURSIVE DESCENT PARSER
+** SO THE PARTS THAT REPEAT ARE NATURAL, THOUGH THIS MAY BE WORRYSOME IN
+** SOME ASPECS, MAY OR MAY NOT NEED FIXING. */
+/* Get a expression node, create according node. */
+struct expression_node*
+get_expression(struct scan_ctx* context)
+{
+  struct factor_node* lhs = get_factor(context);
+    struct lex_node* op = NULL;
+  if ((op = accept_token(context, TOKEN_PLUS)))
+	return (struct expression_node*)
+	  make_expression_node(lhs, EXPR_ADD, (struct __node_type*) get_factor(context));
+  if ((op = accept_token(context, TOKEN_MINUS)))
+	return (struct expression_node*)
+	  make_expression_node(lhs, EXPR_SUB, (struct __node_type*) get_factor(context));
+  return (struct expression_node*) make_expression_node(lhs, EXPR_NONE, NULL);
+}
