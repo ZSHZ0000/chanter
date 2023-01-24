@@ -284,5 +284,5 @@ scan_text(struct scan_ctx* context)
 void
 context_rewind_prev_node(struct scan_ctx* context)
 {
-  context->prev_node = context->root_node;
+  context->prev_node = context->root_node->next;
 }
