@@ -85,10 +85,11 @@ make_expression_node(struct factor_node* lhs, enum EXPR_TYPE op, struct __node_t
 }
 
 /* Prototype. */
-void __destroy_expression_node(struct __node_type* node);
+static void
+__destroy_expression_node(struct __node_type* node);
 
 /* Destroy identifier node. */
-void
+static void
 __destroy_identifier_node(struct __node_type* node)
 {
   struct identifier_node* node_cast = (struct identifier_node*) node;
@@ -98,14 +99,14 @@ __destroy_identifier_node(struct __node_type* node)
 }
 
 /* Destroy number node. */
-void
+static void
 __destroy_number_node(struct __node_type* node)
 {
   free(node);
 }
 
 /* Destroy primary node. */
-void
+static void
 __destroy_primary_node(struct __node_type* node)
 {
   struct primary_node* node_cast = (struct primary_node*) node;
@@ -133,7 +134,7 @@ __destroy_primary_node(struct __node_type* node)
 }
 
 /* Destroy a factor node, if it has other factor sub-nodes, destroy them recursively. */
-void
+static void
 __destroy_factor_node(struct __node_type* node)
 {
   struct factor_node* node_cast = (struct factor_node*) node;
@@ -153,7 +154,7 @@ __destroy_factor_node(struct __node_type* node)
 }
 
 /* Destroy an expr node, if it has other expr sub-nodes, destroy them recursively. */
-void
+static void
 __destroy_expression_node(struct __node_type* node)
 {
   struct expression_node* node_cast = (struct expression_node*) node;
@@ -293,7 +294,7 @@ struct expression_node*
 get_expression(struct scan_ctx* context)
 {
   struct factor_node* lhs = get_factor(context);
-    struct lex_node* op = NULL;
+  struct lex_node* op = NULL;
   if ((op = accept_token(context, TOKEN_PLUS)))
 	return (struct expression_node*)
 	  make_expression_node(lhs, EXPR_ADD, (struct __node_type*) get_factor(context));

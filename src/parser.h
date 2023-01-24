@@ -5,6 +5,9 @@
 #include <stddef.h>
 #include <stdint.h>
 
+/* Include important definitions from lexer.h. */
+#include "lexer.h"
+
 /* Node type enumeration. */
 enum NODE_TYPE
   {
@@ -94,5 +97,55 @@ struct expression_node
     struct expression_node* expression;
   };
 };
+
+/* Prototypes now. */
+
+/* Make an identifier node, the identifier text is copied for itself. */
+struct __node_type*
+make_identifier_node(char* identifier, ptrdiff_t len);
+
+/* Make a number node, parsing the number beforehand. */
+struct __node_type*
+make_number_node(char* number);
+
+/* Make a primary node. */
+struct __node_type*
+make_primary_node(struct __node_type* value);
+
+/* Make a factor node. */
+struct __node_type*
+make_factor_node(struct primary_node* lhs, enum FACTOR_TYPE op, struct __node_type* rhs);
+
+/* Make an expression node. */
+struct __node_type*
+make_expression_node(struct factor_node* lhs, enum EXPR_TYPE op, struct __node_type* rhs);
+
+/* Get a lex token. */
+struct lex_node*
+accept_token(struct scan_ctx* context, enum TOKEN_TYPE type);
+
+/* Require a lex token. */
+struct lex_node*
+require_token(struct scan_ctx* context, enum TOKEN_TYPE type);
+
+/* Get an identifier token, create an identifier node. */
+struct identifier_node*
+get_identifier_token(struct scan_ctx* context);
+
+/* Get a number token, create according node. */
+struct number_node*
+get_number_token(struct scan_ctx* context);
+
+/* Get a primary token, create according node. */
+struct primary_node*
+get_primary_token(struct scan_ctx* context);
+
+/* Get a factor node, create according node. */
+struct factor_node*
+get_factor(struct scan_ctx* context);
+
+/* Get a expression node, create according node. */
+struct expression_node*
+get_expression(struct scan_ctx* context);
 
 #endif /* parser.h */
