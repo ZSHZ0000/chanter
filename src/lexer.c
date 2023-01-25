@@ -114,11 +114,11 @@ get_number_literal(struct scan_ctx* context)
   
   /* Create lex_node. */
   struct lex_node* node = create_node();
-  context->prev_node->next = node;
+  context->current_node->next = node;
   node->type = TOKEN_LITERAL;
   node->begin = current;
   node->len = ((intptr_t) tkn_end - (intptr_t) current);
-  context->prev_node = node;
+  context->current_node = node;
 
   /* So it doesn't loops infinitely. */
   context->current = tkn_end;
@@ -140,11 +140,11 @@ get_identifier(struct scan_ctx* context)
 
     /* Create lex_node. */
   struct lex_node* node = create_node();
-  context->prev_node->next = node;
+  context->current_node->next = node;
   node->type = TOKEN_IDENTIFIER;
   node->begin = current;
   node->len = ((intptr_t) tkn_end - (intptr_t) current);
-  context->prev_node = node;
+  context->current_node = node;
 
   /* So it doesn't loops infinitely. */
   context->current = tkn_end;
@@ -166,11 +166,11 @@ struct lex_node*
 create_token(struct scan_ctx* context, enum TOKEN_TYPE type)
 {
   struct lex_node* node = create_node();
-  context->prev_node->next = node;
+  context->current_node->next = node;
   node->type = type;
   node->begin = NULL;
   node->len = 0;
-  context->prev_node = node;
+  context->current_node = node;
   return node;
 }
 
@@ -179,8 +179,8 @@ static void
 token_1char(struct scan_ctx* context, enum TOKEN_TYPE type)
 {
   create_token(context, type);
-  context->prev_node->begin = context->current;
-  context->prev_node->len = sizeof(char);
+  context->current_node->begin = context->current;
+  context->current_node->len = sizeof(char);
   advance_char(context);
 }
 
@@ -198,7 +198,7 @@ init_scan_context(struct scan_ctx* context, char* filename)
   context->current = context->src;
   context->src_end = (char*) ((intptr_t) context->src + context->len);
   context->root_node = root_node;
-  context->prev_node = root_node;
+  context->current_node = root_node;
 };
 
 /* Destroy lexema list. */
@@ -225,7 +225,7 @@ kill_scan_context(struct scan_ctx* context)
   context->current = NULL;
   context->src_end = NULL;
   context->len = 0;
-  context->prev_node = NULL;
+  context->current_node = NULL;
   destroy_lex_list(context->root_node);
   context->root_node = NULL;
 }
@@ -282,7 +282,7 @@ scan_text(struct scan_ctx* context)
 
 /* Rewind previous node to root node of the token stream. */
 void
-context_rewind_prev_node(struct scan_ctx* context)
+context_rewind_current_node(struct scan_ctx* context)
 {
-  context->prev_node = context->root_node->next;
+  context->current_node = context->root_node->next;
 }

@@ -43,7 +43,7 @@ struct scan_ctx
   char* current; /* Current offset. */
   ptrdiff_t len; /* Length of the source, not necessary but it eases debugging. */
   struct lex_node* root_node; /* Root node. */
-  struct lex_node* prev_node; /* Previous node. */
+  struct lex_node* current_node; /* Current node. */
 };
 
 /* Get the length of a file with a file handle, resets offset to zero. */
@@ -76,7 +76,7 @@ kill_scan_context(struct scan_ctx* context);
 
 /* Rewind previous node to root node of the token stream. */
 void
-context_rewind_prev_node(struct scan_ctx* context);
+context_rewind_current_node(struct scan_ctx* context);
 
 /* Scan & lex a text string, returning a list. first node is always a sentry node. */
 struct lex_node*
