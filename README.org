@@ -8,7 +8,8 @@ Currently the prototype infrastructure is being developed in common lisp,
 contributions are welcome.
 
 ** Building
-No need to build it, you only need
+No need to build it, you only need STEEL BANK COMMON LISP or GNU CLISP or
+your favourite common lisp implementation.
 
 ** Usage
 #+BEGIN_SRC sh
