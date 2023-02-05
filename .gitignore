@@ -1,4 +1,5 @@
 *.o
+*.fasl
 *a.out
 *chanter
 *~
