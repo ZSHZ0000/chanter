@@ -4,15 +4,11 @@
 This is a project that should implement a programming language (very) loosely
 based on lua.
 
-Currently only the lexer works with a limited set of tokens, the roadmap is still
-long.
+Currently the prototype infrastructure is being developed in common lisp,
+contributions are welcome.
 
 ** Building
-Change directory from the root of the project to =/src/= then execute
-#+BEGIN_SRC sh
-  $ make
-#+END_SRC
-it should build without problems as long as you have the required headers.
+No need to build it, you only need
 
 ** Usage
 #+BEGIN_SRC sh
@@ -20,8 +16,10 @@ it should build without problems as long as you have the required headers.
 #+END_SRC
 
 ** Short-term To Do
-- Lexer :: Possibly clean-up, make it more orthogonal(?).
-- Parser :: To implement the parser with the pieces we have so far.
+- Lexer :: Create a lexer in common lisp.
+- Parser :: Create a parser in common lisp.
+- CPS Transformer :: Create CPS Transformer in common lisp.
 - Documentation :: Documentation must be provided & improved.
-- Compiler :: So we can generate bytecode.
-- Virtual machine :: So we can execute byttecode.
+- Compiler :: So we can generate lisp assembler instructions.
+- Assembler :: Probably will need peephole optimiser on it.
+- Virtual machine :: It's instruction set must be further developed.
