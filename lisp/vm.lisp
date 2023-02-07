@@ -79,7 +79,7 @@
 							   (byte-consume 2 the-bytecode (1+ prog-counter)))
 					stack)
 		 (incf prog-counter 3))
-		((5 6 7 8)						; (ADD) (SUB) (MUL) (DIV)
+		((7 8 9 10)						; (ADD) (SUB) (MUL) (DIV)
 		 (case (- (aref the-bytecode prog-counter) 5)
 		   ((0) (binary-dispatch stack +))
 		   ((1) (binary-dispatch stack -))
