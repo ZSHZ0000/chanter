@@ -5,7 +5,7 @@ The CHANTER virtual machine is specified by the following instruction set & it's
 mechanisms & behaviours in this document, the following information includes the instruction
 & it's opcode, in-line arguments, stack arguments & behaviours on execution.
 
-** GLOSARY
+** GLOSSARY
 - TOS :: Top of stack.
 - INLINE-ARGUMENT:NUMBER :: The name of the argument & it's inline size in bytes.
 
