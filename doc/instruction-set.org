@@ -11,45 +11,54 @@ mechanisms & behaviours in this document, the following information includes the
 
 ** INSTRUCTION SET
 *** CONTROL FLOW OF THE PROGRAM
-|----------+--------+-------------------+-----------+-------------------------|
-|          |        |                   |           | <60>                    |
-| MNEMONIC | OPCODE | IN-LINE ARGUMENTS | ARGUMENTS | BEHAVIOURS              |
-|----------+--------+-------------------+-----------+-------------------------|
-| RETURN   |      0 | NONE              | NONE      | Terminates the program. |
-|----------+--------+-------------------+-----------+-------------------------|
+|----------+--------+-------------------+-----------------+-------------------------|
+|          |        |                   |                 | <60>                    |
+| MNEMONIC | OPCODE | IN-LINE ARGUMENTS | STACK ARGUMENTS | BEHAVIOURS              |
+|----------+--------+-------------------+-----------------+-------------------------|
+| RETURN   |      0 | NONE              | NONE            | Terminates the program. |
+|----------+--------+-------------------+-----------------+-------------------------|
 
 *** STACK OPERATIONS
-|-----------+--------+-------------------+-----------+------------------------------------------------------------------|
-|           |        |                   |           | <60>                                                             |
-| MNEMONIC  | OPCODE | IN-LINE ARGUMENTS | ARGUMENTS | BEHAVIOURS                                                       |
-|-----------+--------+-------------------+-----------+------------------------------------------------------------------|
-| DUPLICATE |      1 | NONE              | NONE      | Duplicates TOS value.                                            |
-| CONST     |      2 | CONST-INDEX:2     | NONE      | Pushes into stack the constant value indexed by CONST-INDEX.     |
-| POP       |      3 | NONE              | 1         | Discards the TOS value.                                          |
-| STACK-REF |      4 | STACK-DEPTH:2     | NONE      | Pushes into stack the value that is STACK-DEPTH deep, 0-indexed. |
-|-----------+--------+-------------------+-----------+------------------------------------------------------------------|
+|-----------+--------+-------------------+-----------------+------------------------------------------------------------------|
+|           |        |                   |                 | <60>                                                             |
+| MNEMONIC  | OPCODE | IN-LINE ARGUMENTS | STACK ARGUMENTS | BEHAVIOURS                                                       |
+|-----------+--------+-------------------+-----------------+------------------------------------------------------------------|
+| DUPLICATE |      1 | NONE              | NONE            | Duplicates TOS value.                                            |
+| CONST     |      2 | CONST-INDEX:2     | NONE            | Pushes into stack the constant value indexed by CONST-INDEX.     |
+| POP       |      3 | NONE              | 1               | Discards the TOS value.                                          |
+| STACK-REF |      4 | STACK-DEPTH:2     | NONE            | Pushes into stack the value that is STACK-DEPTH deep, 0-indexed. |
+|-----------+--------+-------------------+-----------------+------------------------------------------------------------------|
 
 *** ARITHMETIC OPERATIONS
-|----------+--------+-------------------+-----------+-------------------------------------------------------|
-|          |        |                   |           | <60>                                                  |
-| MNEMONIC | OPCODE | IN-LINE ARGUMENTS | ARGUMENTS | BEHAVIOURS                                            |
-|----------+--------+-------------------+-----------+-------------------------------------------------------|
-| ADD      |      7 | NONE              |         2 | Adds TOS -1 & TOS, pushes result into stack.          |
-| SUB      |      8 | NONE              |         2 | Subtracts TOS from TOS -1, pushes result into stack.  |
-| MUL      |      9 | NONE              |         2 | Multiplies TOS -1 with TOS, pushes result into stack. |
-| DIV      |     10 | NONE              |         2 | Divides TOS-1 with TOS, pushes result into stack.     |
-|----------+--------+-------------------+-----------+-------------------------------------------------------|
+|----------+--------+-------------------+-----------------+-------------------------------------------------------|
+|          |        |                   |                 | <60>                                                  |
+| MNEMONIC | OPCODE | IN-LINE ARGUMENTS | STACK ARGUMENTS | BEHAVIOURS                                            |
+|----------+--------+-------------------+-----------------+-------------------------------------------------------|
+| ADD      |      7 | NONE              |               2 | Adds TOS -1 & TOS, pushes result into stack.          |
+| SUB      |      8 | NONE              |               2 | Subtracts TOS from TOS -1, pushes result into stack.  |
+| MUL      |      9 | NONE              |               2 | Multiplies TOS -1 with TOS, pushes result into stack. |
+| DIV      |     10 | NONE              |               2 | Divides TOS-1 with TOS, pushes result into stack.     |
+|----------+--------+-------------------+-----------------+-------------------------------------------------------|
 
 *** COMPARISON OPERATIONS
-|----------+--------+-------------------+-----------+--------------------------------------------------------------------------|
-|          |        |                   |           | <60>                                                                     |
-| MNEMONIC | OPCODE | IN-LINE ARGUMENTS | ARGUMENTS | BEHAVIOURS                                                               |
-|----------+--------+-------------------+-----------+--------------------------------------------------------------------------|
-| EQ?      |     13 | NONE              |         2 | Compares TOS -1 & TOS for equality, pushes result into stack             |
-| NEQ?     |     14 | NONE              |         2 | Compares TOS -1 & TOS for inequality, pushes result into stack           |
-| ZERO?    |     15 | NONE              |         1 | Compares TOS to 0, pushes result into stack.                             |
-| LESSER?  |     16 | NONE              |         2 | Checks if TOS -1 is lesser than TOS, pushes result into stack.           |
-| GREATER? |     17 | NONE              |         2 | Checks if TOS -1 is greater than TOS, pushes result into stack.          |
-| LESSEQ?  |     18 | NONE              |         2 | Checks if TOS -1 is equal or lesser than TOS, pushes result into stack.  |
-| GREATEQ? |     19 | NONE              |         2 | Checks if TOS -1 is equal or greater than TOS, pushes result into stack. |
-|----------+--------+-------------------+-----------+--------------------------------------------------------------------------|
+|----------+--------+-------------------+-----------------+--------------------------------------------------------------------------|
+|          |        |                   |                 | <60>                                                                     |
+| MNEMONIC | OPCODE | IN-LINE ARGUMENTS | STACK ARGUMENTS | BEHAVIOURS                                                               |
+|----------+--------+-------------------+-----------------+--------------------------------------------------------------------------|
+| EQ?      |     13 | NONE              |               2 | Compares TOS -1 & TOS for equality, pushes result into stack             |
+| NEQ?     |     14 | NONE              |               2 | Compares TOS -1 & TOS for inequality, pushes result into stack           |
+| ZERO?    |     15 | NONE              |               1 | Compares TOS to 0, pushes result into stack.                             |
+| LESSER?  |     16 | NONE              |               2 | Checks if TOS -1 is lesser than TOS, pushes result into stack.           |
+| GREATER? |     17 | NONE              |               2 | Checks if TOS -1 is greater than TOS, pushes result into stack.          |
+| LESSEQ?  |     18 | NONE              |               2 | Checks if TOS -1 is equal or lesser than TOS, pushes result into stack.  |
+| GREATEQ? |     19 | NONE              |               2 | Checks if TOS -1 is equal or greater than TOS, pushes result into stack. |
+|----------+--------+-------------------+-----------------+--------------------------------------------------------------------------|
+
+*** CONTROL-FLOW OPERATIONS
+|----------+--------+-------------------+-----------+----------------------------------------------------------------------------------------------------------------------------------|
+|          |        |                   |           | <60>                                                                                                                             |
+| MNEMONIC | OPCODE | IN-LINE ARGUMENTS | ARGUMENTS | BEHAVIOURS                                                                                                                       |
+|----------+--------+-------------------+-----------+----------------------------------------------------------------------------------------------------------------------------------|
+| GOTO     |     24 | OFFSET:4          | NONE      | Sets the program counter to current program counter + OFFSET,  the current program counter is the index of the GOTO instruction. |
+| GOTO-IF  |     25 | OFFSET:4          | 1         | Same as above, but it also checks that the TOS is true as a pre-requisite, it doesn't pop it from stack.                         |
+|----------+--------+-------------------+-----------+----------------------------------------------------------------------------------------------------------------------------------|
