@@ -23,6 +23,11 @@
 (defun peek-down (stack n)
   (aref stack (- (fill-pointer stack) (+ n 1))))
 
+;;; Set the value that is N values deep down.
+(defsetf peek-down (stack n) (new-value)
+  `(progn (setf (aref ,stack (- (fill-pointer ,stack) (+ ,n 1))) ,new-value)
+		  ,new-value))
+
 ;;; Fall N elements from stack.
 (defun fall-off (stack n)
   (setf (fill-pointer stack) (- (fill-pointer stack) n)))
@@ -39,7 +44,7 @@
 ;;; Unary dispatch.
 (defmacro unary-dispatch (stack operation)
   `(let ((x (peek-down ,stack 0)))
-	 (fall-off ,stack 1)
+	 (pop-elem ,stack)
 	 ,(if (symbolp operation)
 		  `(push-elem (,operation x) ,stack)
 		  `(push-elem (funcall ,operation x) ,stack))))
@@ -52,6 +57,18 @@
 	  ((= bytes-done byte-count) value)
 	(setf value (ash value 8))
 	(setf value (logior value (aref the-instructions index)))))
+
+;; Sign an integer of size size, we won't need to deal with this in C.
+(defun sign-integer (integer size)
+  (let ((bits-minus-1
+		  (ash 1 (1- (* 8 size))))
+		(largest-minus-1
+		  (1- (ash 1 (1- (* 8 size))))))
+	  (if (zerop (logand integer bits-minus-1))
+		  (logand integer largest-minus-1)
+		(- (logand integer largest-minus-1)
+		   largest-minus-1
+		   1))))
 
 ;;; Run the bytecode passed.
 (defun execute-1 (bytecode stack)
@@ -79,8 +96,21 @@
 							   (byte-consume 2 the-bytecode (1+ prog-counter)))
 					stack)
 		 (incf prog-counter 3))
-		((7 8 9 10)						; (ADD) (SUB) (MUL) (DIV)
-		 (case (- (aref the-bytecode prog-counter) 5)
+		((5)							; (STACK-SET)
+		 (let ((tos (peek-stack stack)))
+		   (pop-elem stack)
+		   (setf (peek-down stack
+							(byte-consume 2 the-bytecode (1+ prog-counter)))
+				 tos))
+		 (incf prog-counter 3))
+		((6)							; (DROP-BUT-TOP)
+		 (let ((tos (peek-stack stack)))
+		   (pop-elem stack)
+		   (fall-off stack (byte-consume 2 the-bytecode (1+ prog-counter)))
+		   (push-elem tos stack))
+		 (incf prog-counter 3))
+		((7 8 9 10)						; (ADD SUB MUL DIV)
+		 (case (- (aref the-bytecode prog-counter) 7)
 		   ((0) (binary-dispatch stack +))
 		   ((1) (binary-dispatch stack -))
 		   ((2) (binary-dispatch stack *))
@@ -88,7 +118,7 @@
 		 (incf prog-counter))
 		;; (EQ? NEQ? ZERO? LESSER? GREATER? LESSEQ? GREATEQ?)
 		((13 14 15 16 17 18 19)
-		 (case (- (aref the-bytecode prog-counter) 11)
+		 (case (- (aref the-bytecode prog-counter) 13)
 		   ((0) (binary-dispatch stack eq))
 		   ((1) (binary-dispatch stack (complement #'eq)))
 		   ((2) (unary-dispatch stack zerop))
@@ -96,4 +126,16 @@
 		   ((4) (binary-dispatch stack >))
 		   ((5) (binary-dispatch stack <=))
 		   ((6) (binary-dispatch stack >=)))
-		 (incf prog-counter))))))
+		 (incf prog-counter))
+		((24)							; (GOTO)
+		 (let ((relative-addr
+				 (sign-integer (byte-consume 4 the-bytecode (1+ prog-counter))
+							   4)))
+		   (setf prog-counter relative-addr)))
+		((25)							; (GOTO-IF-T)
+		 (let ((tos (peek-stack stack))
+			   (relative-addr
+				 (sign-integer (byte-consume 4 the-bytecode (1+ prog-counter))
+							   4)))
+		   (when tos
+			 (setf prog-counter (+ prog-counter relative-addr)))))))))
