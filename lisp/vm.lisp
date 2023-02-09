@@ -28,6 +28,10 @@
   `(progn (setf (aref ,stack (- (fill-pointer ,stack) (+ ,n 1))) ,new-value)
 		  ,new-value))
 
+;;; Set a value N values deep down to value.
+(defun set-n-deep (stack n value)
+  (setf (peek-down stack n) (new-value)))
+
 ;;; Fall N elements from stack.
 (defun fall-off (stack n)
   (setf (fill-pointer stack) (- (fill-pointer stack) n)))
@@ -49,7 +53,7 @@
 		  `(push-elem (,operation x) ,stack)
 		  `(push-elem (funcall ,operation x) ,stack))))
 
-;; Consume byte sequence from the instruction vector.
+;;; Consume byte sequence from the instruction vector.
 (defun byte-consume (byte-count the-instructions program-counter)
   (do ((value 0)
 	   (index program-counter (1+ index))
@@ -58,7 +62,7 @@
 	(setf value (ash value 8))
 	(setf value (logior value (aref the-instructions index)))))
 
-;; Sign an integer of size size, we won't need to deal with this in C.
+;;; Sign an integer of size size, we won't need to deal with this in C.
 (defun sign-integer (integer size)
   (let ((bits-minus-1
 		  (ash 1 (1- (* 8 size))))
@@ -98,10 +102,10 @@
 		 (incf prog-counter 3))
 		((5)							; (STACK-SET)
 		 (let ((tos (peek-stack stack)))
-		   (pop-elem stack)
 		   (setf (peek-down stack
 							(byte-consume 2 the-bytecode (1+ prog-counter)))
 				 tos))
+		 (pop-elem stack)
 		 (incf prog-counter 3))
 		((6)							; (DROP-BUT-TOP)
 		 (let ((tos (peek-stack stack)))
@@ -141,4 +145,6 @@
 			   (progn
 				 (pop-elem stack)
 				 (setf prog-counter (+ prog-counter relative-addr)))
-			   (pop-elem stack))))))))
+			   (progn
+				 (pop-elem stack)
+				 (incf prog-counter 5)))))))))
