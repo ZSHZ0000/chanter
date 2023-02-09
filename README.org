@@ -1,8 +1,9 @@
 * CHANTER
 
 ** Prelude
-This is a project that should implement a programming language (very) loosely
-based on lua.
+This is a project that should implement a functional programming language
+loosely alike in lua in syntax but with some more extra features that I
+think lua could had enjoyed of.
 
 Currently the prototype infrastructure is being developed in common lisp,
 contributions are welcome.
