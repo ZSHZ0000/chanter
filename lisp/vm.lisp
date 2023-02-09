@@ -135,7 +135,7 @@
 		 (let ((relative-addr
 				 (sign-integer (byte-consume 4 the-bytecode (1+ prog-counter))
 							   4)))
-		   (setf prog-counter relative-addr)))
+		   (setf prog-counter (+ prog-counter relative-addr))))
 		((25)							; (GOTO-IF-T)
 		 (let ((tos (peek-stack stack))
 			   (relative-addr
