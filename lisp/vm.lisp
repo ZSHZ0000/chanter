@@ -137,5 +137,8 @@
 			   (relative-addr
 				 (sign-integer (byte-consume 4 the-bytecode (1+ prog-counter))
 							   4)))
-		   (when tos
-			 (setf prog-counter (+ prog-counter relative-addr)))))))))
+		   (if tos
+			   (progn
+				 (pop-elem stack)
+				 (setf prog-counter (+ prog-counter relative-addr)))
+			   (pop-elem stack))))))))

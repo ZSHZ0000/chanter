@@ -55,10 +55,10 @@ mechanisms & behaviours in this document, the following information includes the
 |----------+--------+-------------------+-----------------+--------------------------------------------------------------------------|
 
 *** CONTROL-FLOW OPERATIONS
-|----------+--------+-------------------+-----------+----------------------------------------------------------------------------------------------------------------------------------|
-|          |        |                   |           | <60>                                                                                                                             |
-| MNEMONIC | OPCODE | IN-LINE ARGUMENTS | ARGUMENTS | BEHAVIOURS                                                                                                                       |
-|----------+--------+-------------------+-----------+----------------------------------------------------------------------------------------------------------------------------------|
-| GOTO     |     24 | OFFSET:4          | NONE      | Sets the program counter to current program counter + OFFSET,  the current program counter is the index of the GOTO instruction. |
-| GOTO-IF  |     25 | OFFSET:4          | 1         | Same as above, but it also checks that the TOS is true as a pre-requisite, it doesn't pop it from stack.                         |
-|----------+--------+-------------------+-----------+----------------------------------------------------------------------------------------------------------------------------------|
+|-----------+--------+-------------------+-----------+----------------------------------------------------------------------------------------------------------------------------------|
+|           |        |                   |           | <60>                                                                                                                             |
+| MNEMONIC  | OPCODE | IN-LINE ARGUMENTS | ARGUMENTS | BEHAVIOURS                                                                                                                       |
+|-----------+--------+-------------------+-----------+----------------------------------------------------------------------------------------------------------------------------------|
+| GOTO      |     24 | OFFSET:4          | NONE      | Sets the program counter to current program counter + OFFSET,  the current program counter is the index of the GOTO instruction. |
+| GOTO-IF-T |     25 | OFFSET:4          | 1         | Same as above, but it also checks that the TOS is true as a pre-requisite, test value is popped from stack                       |
+|-----------+--------+-------------------+-----------+----------------------------------------------------------------------------------------------------------------------------------|
