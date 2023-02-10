@@ -30,7 +30,7 @@
 
 ;;; Set a value N values deep down to value.
 (defun set-n-deep (stack n value)
-  (setf (peek-down stack n) (new-value)))
+  (setf (peek-down stack n) value))
 
 ;;; Fall N elements from stack.
 (defun fall-off (stack n)
@@ -102,9 +102,7 @@
 		 (incf prog-counter 3))
 		((5)							; (STACK-SET)
 		 (let ((tos (peek-stack stack)))
-		   (setf (peek-down stack
-							(byte-consume 2 the-bytecode (1+ prog-counter)))
-				 tos))
+		   (set-n-deep stack (byte-consume 2 the-bytecode (1+ prog-counter)) tos))
 		 (pop-elem stack)
 		 (incf prog-counter 3))
 		((6)							; (DROP-BUT-TOP)
