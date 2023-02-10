@@ -106,6 +106,11 @@
 				(opcode-byte (get-opcode mnemonic))
 				(opcode-argument-count (get-argument-count mnemonic)))
 		   (cond
+			 ;; Check it is an actual instruction.
+			 ((not (get-data mnemonic))
+			  (error
+			   (format nil "Instruction ~A does not exist, typo?"
+					   mnemonic)))
 			 ;; If it is an argument-less instruction just emit it right away.
 			 ((= opcode-argument-count 0)
 			  (when arguments
