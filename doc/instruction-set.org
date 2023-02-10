@@ -6,7 +6,8 @@ mechanisms & behaviours in this document, the following information includes the
 & it's opcode, in-line arguments, stack arguments & behaviours on execution.
 
 ** GLOSSARY
-- TOS :: Top of stack.
+- TOS :: Top of stack value.
+- TOP :: Top of stack offset 0 (TOS).
 - INLINE-ARGUMENT:NUMBER :: The name of the argument & it's inline size in bytes.
 
 ** INSTRUCTION SET
@@ -34,10 +35,10 @@ mechanisms & behaviours in this document, the following information includes the
 |          |        |                   |                 | <60>                                                  |
 | MNEMONIC | OPCODE | IN-LINE ARGUMENTS | STACK ARGUMENTS | BEHAVIOURS                                            |
 |----------+--------+-------------------+-----------------+-------------------------------------------------------|
-| ADD      |      7 | NONE              |               2 | Adds TOS -1 & TOS, pushes result into stack.          |
-| SUB      |      8 | NONE              |               2 | Subtracts TOS from TOS -1, pushes result into stack.  |
-| MUL      |      9 | NONE              |               2 | Multiplies TOS -1 with TOS, pushes result into stack. |
-| DIV      |     10 | NONE              |               2 | Divides TOS-1 with TOS, pushes result into stack.     |
+| ADD      |      7 | NONE              |               2 | Adds TOP -1 & TOS, pushes result into stack.          |
+| SUB      |      8 | NONE              |               2 | Subtracts TOS from TOP -1, pushes result into stack.  |
+| MUL      |      9 | NONE              |               2 | Multiplies TOP -1 with TOS, pushes result into stack. |
+| DIV      |     10 | NONE              |               2 | Divides TOP -1 with TOS, pushes result into stack.    |
 |----------+--------+-------------------+-----------------+-------------------------------------------------------|
 
 *** COMPARISON OPERATIONS
@@ -45,13 +46,13 @@ mechanisms & behaviours in this document, the following information includes the
 |          |        |                   |                 | <60>                                                                     |
 | MNEMONIC | OPCODE | IN-LINE ARGUMENTS | STACK ARGUMENTS | BEHAVIOURS                                                               |
 |----------+--------+-------------------+-----------------+--------------------------------------------------------------------------|
-| EQ?      |     13 | NONE              |               2 | Compares TOS -1 & TOS for equality, pushes result into stack             |
-| NEQ?     |     14 | NONE              |               2 | Compares TOS -1 & TOS for inequality, pushes result into stack           |
-| ZERO?    |     15 | NONE              |               1 | Compares TOS to 0, pushes result into stack.                             |
-| LESSER?  |     16 | NONE              |               2 | Checks if TOS -1 is lesser than TOS, pushes result into stack.           |
-| GREATER? |     17 | NONE              |               2 | Checks if TOS -1 is greater than TOS, pushes result into stack.          |
-| LESSEQ?  |     18 | NONE              |               2 | Checks if TOS -1 is equal or lesser than TOS, pushes result into stack.  |
-| GREATEQ? |     19 | NONE              |               2 | Checks if TOS -1 is equal or greater than TOS, pushes result into stack. |
+| EQ?      |     13 | NONE              |               2 | Compares TOP -1 & TOS for equality, pushes result into stack             |
+| NEQ?     |     14 | NONE              |               2 | Compares TOP -1 & TOS for inequality, pushes result into stack           |
+| ZERO?    |     15 | NONE              |               1 | Compares TOP to 0, pushes result into stack.                             |
+| LESSER?  |     16 | NONE              |               2 | Checks if TOP -1 is lesser than TOS, pushes result into stack.           |
+| GREATER? |     17 | NONE              |               2 | Checks if TOP -1 is greater than TOS, pushes result into stack.          |
+| LESSEQ?  |     18 | NONE              |               2 | Checks if TOP -1 is equal or lesser than TOS, pushes result into stack.  |
+| GREATEQ? |     19 | NONE              |               2 | Checks if TOP -1 is equal or greater than TOS, pushes result into stack. |
 |----------+--------+-------------------+-----------------+--------------------------------------------------------------------------|
 
 *** CONTROL-FLOW OPERATIONS
