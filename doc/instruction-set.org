@@ -8,6 +8,7 @@ mechanisms & behaviours in this document, the following information includes the
 ** GLOSSARY
 - TOS :: Top of stack value.
 - TOP :: Top of stack offset 0 (TOS).
+- PC :: Current program counter.
 - INLINE-ARGUMENT:NUMBER :: The name of the argument & it's inline size in bytes.
 
 ** INSTRUCTION SET
@@ -28,6 +29,7 @@ mechanisms & behaviours in this document, the following information includes the
 | CONST     |      2 | CONST-INDEX:2     | NONE            | Pushes into stack the constant value indexed by CONST-INDEX.     |
 | POP       |      3 | NONE              | 1               | Discards the TOS value.                                          |
 | STACK-REF |      4 | STACK-DEPTH:2     | NONE            | Pushes into stack the value that is STACK-DEPTH deep, 0-indexed. |
+| STACK-SET |      5 | STACK-DEPTH:2     | 1               | Sets the value TOP -1 to TOS, then pop it.                       |
 |-----------+--------+-------------------+-----------------+------------------------------------------------------------------|
 
 *** ARITHMETIC OPERATIONS
@@ -56,10 +58,12 @@ mechanisms & behaviours in this document, the following information includes the
 |----------+--------+-------------------+-----------------+--------------------------------------------------------------------------|
 
 *** CONTROL-FLOW OPERATIONS
-|-----------+--------+-------------------+-----------+----------------------------------------------------------------------------------------------------------------------------------|
-|           |        |                   |           | <60>                                                                                                                             |
-| MNEMONIC  | OPCODE | IN-LINE ARGUMENTS | ARGUMENTS | BEHAVIOURS                                                                                                                       |
-|-----------+--------+-------------------+-----------+----------------------------------------------------------------------------------------------------------------------------------|
-| GOTO      |     24 | OFFSET:4          | NONE      | Sets the program counter to current program counter + OFFSET,  the current program counter is the index of the GOTO instruction. |
-| GOTO-IF-T |     25 | OFFSET:4          | 1         | Same as above, but it also checks that the TOS is true as a pre-requisite, test value is popped from stack                       |
-|-----------+--------+-------------------+-----------+----------------------------------------------------------------------------------------------------------------------------------|
+|----------------+--------+-------------------+-----------+------------------------------------------------------------------------------------------------------------|
+|                |        |                   |           | <60>                                                                                                       |
+| MNEMONIC       | OPCODE | IN-LINE ARGUMENTS | ARGUMENTS | BEHAVIOURS                                                                                                 |
+|----------------+--------+-------------------+-----------+------------------------------------------------------------------------------------------------------------|
+| GOTO           |     24 | OFFSET:4          | NONE      | Sets the PC to PC + OFFSET, the current PC is the index of the GOTO instruction.                           |
+| GOTO-IF-T      |     25 | OFFSET:4          | 1         | Same as above, but it also checks that the TOS is true as a pre-requisite, test value is popped from stack |
+| CALL-SEGMENT   |     30 | OFFSET:4          | NONE      | Pushes PC +5 (the instruction after this one) & jumps to PC + OFFSET.                                      |
+| RETURN-SEGMENT |     31 | NONE              | 1         | Sets PC to TOS, pops it from stack.                                                                        |
+|----------------+--------+-------------------+-----------+------------------------------------------------------------------------------------------------------------|
