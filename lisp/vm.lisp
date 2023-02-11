@@ -7,7 +7,7 @@
 ;;; Push to stack.
 (defun push-elem (element stack)
   "Push element to stack."
-  (vector-push element stack))
+  (vector-push-extend element stack (expt 2 16)))
 
 ;;; Pop from stack.
 (defun pop-elem (stack)
@@ -145,4 +145,15 @@
 				 (setf prog-counter (+ prog-counter relative-addr)))
 			   (progn
 				 (pop-elem stack)
-				 (incf prog-counter 5)))))))))
+				 (incf prog-counter 5)))))
+		((30)							; (CALL-SEGMENT)
+		 (let ((return-addr (+ prog-counter 5))
+			   (relative-addr
+				 (sign-integer (byte-consume 4 the-bytecode (1+ prog-counter))
+							   4)))
+		   (push-elem return-addr stack)
+		   (setf prog-counter (+ prog-counter relative-addr))))
+		((31)							; (RETURN-SEGMENT)
+		 (let ((tos (peek-stack stack)))
+		   (pop-elem stack)
+		   (setf prog-counter tos)))))))

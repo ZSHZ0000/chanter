@@ -32,7 +32,9 @@
 	(GREATEQ? 19 0)
 	;;; Control flow operations.
 	(GOTO 24 1 4)
-	(GOTO-IF-T 25 1 4)))
+	(GOTO-IF-T 25 1 4)
+	(CALL-SEGMENT 30 1 4)
+	(RETURN-SEGMENT 31 0)))
 
 ;;; Various general instruction abstractions.
 (defun get-data (mnemonic)
@@ -126,7 +128,7 @@
 			   (format nil "Instruction ~A requires specifically ~A arguments but got ~A."
 					   mnemonic opcode-argument-count (length arguments))))
 			 ;; Handle GOTO & GOTO-IF specially.
-			 ((member mnemonic '(goto goto-if-t) :test #'string=)
+			 ((member mnemonic '(goto goto-if-t call-segment) :test #'string=)
 			  (emit-byte the-bytecode-output opcode-byte)
 			  (incf virtual-prog-counter)
 			  (let ((label (first arguments)))
